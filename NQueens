@@ -1,0 +1,35 @@
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        char[][] board = new char[n][n];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(board[i], '.');
+        }
+        List<List<String>> solutions = new ArrayList<>();
+        solve(0, board, solutions, new boolean[n], new boolean[2 * n], new boolean[2 * n]);
+        return solutions;
+    }
+
+    private void solve(int col, char[][] board, List<List<String>> solutions, boolean[] queens, boolean[] diag1, boolean[] diag2) {
+        if (col == board.length) {
+            solutions.add(construct(board));
+            return;
+        }
+        for (int row = 0; row < board.length; row++) {
+            if (!queens[row] && !diag1[row + col] && !diag2[row - col + board.length - 1]) {
+                board[row][col] = 'Q';
+                queens[row] = diag1[row + col] = diag2[row - col + board.length - 1] = true;
+                solve(col + 1, board, solutions, queens, diag1, diag2);
+                board[row][col] = '.';
+                queens[row] = diag1[row + col] = diag2[row - col + board.length - 1] = false;
+            }
+        }
+    }
+
+    private List<String> construct(char[][] board) {
+        List<String> res = new ArrayList<>();
+        for (char[] row : board) {
+            res.add(new String(row));
+        }
+        return res;
+    }
+}
